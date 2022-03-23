@@ -26,43 +26,33 @@ attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap
 // Create a base layer that holds both maps.
 let baseMaps = {
     "Streets": streets,
-    "Satellite Streets": satelliteStreets
+    "satellite": satelliteStreets
   };
 
   // Create the map object with a center and zoom level.
 let map = L.map("mapid", {
-    center: [43.7, -79.3],
-    paint: {
-      'fill-color': [
-          
-          '#ffffa1' // else paint in gray
-      ],
-      'fill-opacity': 0.4},
-    style:"yellow",
-    zoom: 11,
-    layers:[satelliteStreets]
+    center: [39.5, -98.5],
+    zoom: 4
   });
 
 // Pass our map layers into our layers control and add the layers control to the map.
 L.control.layers(baseMaps).addTo(map);
 
 
-// Accessing the airport GeoJSON URL
-let torontoHoods = "https://raw.githubusercontent.com/rajimuth/Mapping_Earthquakes/main/torontoNeighborhoods.json";
+// Accessing the earthquake GeoJSON URL
+let earthquakeData = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 
 // Grabbing our GeoJSON data.
-d3.json(torontoHoods).then(function(data) {
+d3.json(earthquakeData).then(function(data) {
     console.log(data);
   // Creating a GeoJSON layer with the retrieved data.
-  L.geoJSON(data,{
-    type:'fill',    
-    fillColor:"yellow",     
-    weight:2,
-    pointToLayer: function(feature, latlng) {
-        console.log(feature);
-        return L.marker(latlng)
-        .bindPopup("<h2>" + "Area Name:" + features.properties.AREA_NAME + "</h2>");
-        }
+  L.geoJSON(data).addTo(map);
+  //   ,{
+  //   pointToLayer: function(feature, latlng) {
+  //       console.log(feature);
+  //       return L.marker(latlng)
+  //       .bindPopup("<h2>" + "Magnitude" + features[0].properties.mag + "</h2> <hr> <h3> Place:" + features[0].properties.place + "</h3>");
+  //       }
 
-  }).addTo(map);
+  // }).addTo(map);
 });
